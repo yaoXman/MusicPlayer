@@ -4,6 +4,15 @@ public class SavedList {
 	String mListName = null;
 	int mCount = 0;
 	int mListId = -1;
+	boolean isPlaying = false;
+
+	public boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public void setPlaying(boolean playing) {
+		isPlaying = playing;
+	}
 
 	public String getListName() {
 		return mListName;

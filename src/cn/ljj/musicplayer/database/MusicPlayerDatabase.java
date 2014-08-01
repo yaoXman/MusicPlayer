@@ -26,6 +26,7 @@ public class MusicPlayerDatabase extends SQLiteOpenHelper{
 	public static final String DURATION = "duration";
 
 	public static final String LIST_NAME = "list_name";
+	public static final String LIST_IS_PLAYING = "is_playing";
 	public static final String LIST_SIZE = "list_size";
 	
 	
@@ -48,6 +49,7 @@ public class MusicPlayerDatabase extends SQLiteOpenHelper{
 		db.execSQL(cmd);
 		cmd = "CREATE TABLE " + TABLE_LIST
 				+ " ( _id INTEGER primary key autoincrement, "
+				+ LIST_IS_PLAYING + " INTEGER default 0, "
 				+ LIST_NAME + " TEXT, "
 				+ LIST_SIZE + " INTEGER)";
 		db.execSQL(cmd);

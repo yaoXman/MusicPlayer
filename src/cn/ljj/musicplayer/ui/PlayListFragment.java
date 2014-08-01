@@ -14,6 +14,7 @@ import cn.ljj.musicplayer.player.service.INotify;
 import cn.ljj.musicplayer.player.service.NotifyImpl;
 import cn.ljj.musicplayer.playlist.PlayList;
 import cn.ljj.musicplayer.playlist.SavedList;
+import cn.ljj.musicplayer.ui.SavedListAdapter.OnItemViewClickListner;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -37,7 +38,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class PlayListFragment extends BaseFragment implements Defines,
-		OnItemClickListener, OnMenuItemClickListener, SeachCallback {
+		OnItemClickListener, OnMenuItemClickListener, SeachCallback, OnItemViewClickListner {
 	static final int REQ_CODE_GET_MUSIC = 10;
 	static final int MENU_DELETE = 0;
 	static final int MENU_DOWNLOAD = 1;
@@ -97,7 +98,7 @@ public class PlayListFragment extends BaseFragment implements Defines,
 			mAllList.clear();
 			mAllList.addAll(mPlaylist.getAllSavedPlayList());
 			mSavedListAdapter = new SavedListAdapter(getActivity(), mAllList);
-			mSavedListAdapter.setAddButtonListener(this);
+			mSavedListAdapter.setOnItemViewClickListner(this);
 		}
 		return mSavedListAdapter;
 	}
@@ -313,17 +314,6 @@ public class PlayListFragment extends BaseFragment implements Defines,
 		case R.id.btn_add_music:
 			selectMusic();
 			break;
-		case R.id.btn_add_list:
-			DialogAddList dal = new DialogAddList(getActivity(),
-					new ListChangeListner() {
-						@Override
-						public void onListChange() {
-							mListAdapter = getSavedListAdapter(true);
-							getListView().setAdapter(mListAdapter);
-						}
-					});
-			dal.show();
-			break;
 		default:
 
 		}
@@ -425,5 +415,27 @@ public class PlayListFragment extends BaseFragment implements Defines,
 		}
 
 		return music;
+	}
+
+	@Override
+	public void onItemViewClick(int position, int resId, View parent) {
+		switch(resId){
+
+		case R.id.btn_add_list:
+			DialogAddList dal = new DialogAddList(getActivity(),
+					new ListChangeListner() {
+						@Override
+						public void onListChange() {
+							mListAdapter = getSavedListAdapter(true);
+							getListView().setAdapter(mListAdapter);
+						}
+					});
+			dal.show();
+			break;
+		case R.id.btn_add_to_list:
+			mPlaylist.load(mAllList.get(position).getListName());
+			selectMusic();
+			break;
+		}
 	}
 }

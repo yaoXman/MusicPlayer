@@ -301,11 +301,14 @@ public class PlayListPersister {
 					.getColumnIndex(MusicPlayerDatabase.LIST_SIZE);
 			int nameIndex = cursor
 					.getColumnIndex(MusicPlayerDatabase.LIST_NAME);
+			int isPlayingIndex = cursor
+					.getColumnIndex(MusicPlayerDatabase.LIST_IS_PLAYING);
 			while (cursor.moveToNext()) {
 				SavedList l = new SavedList();
 				l.setCount(cursor.getInt(countIndex));
 				l.setListId(cursor.getInt(idIndex));
 				l.setListName(cursor.getString(nameIndex));
+				l.setPlaying(cursor.getInt(isPlayingIndex) == 1);
 				list.add(l);
 			}
 		} catch (Exception e) {
@@ -350,5 +353,27 @@ public class PlayListPersister {
 				c.close();
 			}
 		}
+	}
+
+	public void updatePlaying(int id){
+		clearPlaying();
+		ContentValues values = new ContentValues();
+		values.put(MusicPlayerDatabase.LIST_IS_PLAYING, 1);
+		db.update(MusicPlayerDatabase.TABLE_LIST, values, "_id="+id, null);
+	}
+	
+	public long updatePlaying(String listName){
+		clearPlaying();
+		ContentValues values = new ContentValues();
+		values.put(MusicPlayerDatabase.LIST_IS_PLAYING, 1);
+		return db.update(MusicPlayerDatabase.TABLE_LIST, values,
+				MusicPlayerDatabase.LIST_NAME+" = '"+listName + "'", null);
+	}
+
+	public void clearPlaying(){
+		ContentValues values = new ContentValues();
+		values.put(MusicPlayerDatabase.LIST_IS_PLAYING, 0);
+		db.update(MusicPlayerDatabase.TABLE_LIST, values, null, null);
+		
 	}
 }
